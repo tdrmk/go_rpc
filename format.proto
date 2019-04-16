@@ -1,0 +1,30 @@
+syntax="proto3";
+import "google/protobuf/any.proto";
+package rpc;
+
+message RpcRequestHeader {
+	string MethodName = 1;
+}
+
+// Indicate the status of RPC response
+enum RpcStatus {
+	// if RPC layer was ok or any error in RPC and not application error
+	OK = 0;
+	ERROR = 1;
+}
+
+message RpcResponseHeader {
+	RpcStatus Status = 1;
+	// Return if any rpc error or application error
+	string Error = 2;
+}
+
+// Message on the wire
+message RpcMessage {
+	int64 RpcId = 1;
+	oneof RpcHeader {
+		RpcRequestHeader RequestHeader = 2;
+		RpcResponseHeader ResponseHeader = 3;
+	}
+	google.protobuf.Any Payload = 4;
+}
